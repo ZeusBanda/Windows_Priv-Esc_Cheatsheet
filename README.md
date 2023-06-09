@@ -46,7 +46,19 @@
   ```
 
 ## Kernel Exploits
+  1. Get the system info
+  ```cmd
+  systeminfo
+  ```
+  2. Run an exploit suggester against the system info
+  3. Work through and reasearch the vulnerabilities
+  4. Run the exploit
+  5. NT Authority\system! 
+
 ## Credentials
+###
+###
+###
 ## Windows Subsystem for Linux
 ## Impersonation and Potato Attacks
 ## RunAs
