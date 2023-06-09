@@ -231,7 +231,7 @@
 
 ## Executable FIles
   1. Run PowerUp.ps1 and check for service executable and argument permissions
-    ```cmd
+  ```cmd
   powershell -ep bypass
   . .\PowerUp.ps1
   Invoke-AllChecks
